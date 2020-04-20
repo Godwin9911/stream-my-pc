@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StreamMyPC | Host</title>
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sketchpad/0.1.0/styles/sketchpad.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+  <link rel="stylesheet" href="/css/main.css">
+  <style>
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark nav-custom">
+    <div class="container">
+      <a class="navbar-brand" href="#"><i class="fa fa-play-circle fa-lg icon-color"></i> Stream<span class="icon-color">MyPC</span> | <small>Host Screen</small></a>
+    <ul class="navbar-nav ml-auto">
+      <li class="nav-item">
+        <a class="nav-link text-white"><i class="far fa-user icon-color"></i> HOST</a>
+      </li>
+    </ul>
+    </nav>
+  <main>
+    <div class="container">
+      <div class="p-2">
+        <p class="mb-0">Stream content from your PC to the internet</p>
+        <small id="socketMessage"></small>
+        <small id="message"></small>
+      </div>
+      <hr>
+      <div class="mb-1 pb-2">
+        <input class="" type="file" accept="video/*"/>
+        <button class="btn btn-light border mt-1" id="startStream"><i class="fa fa-file-video"></i> File Stream</button>
+        <button type="button" class="btn btn-danger mt-1 d-none" id="addYoutubeStreamLink">Youtube Link</button>
+        <button type="button" class="btn btn-light border mt-1" id="screenCaptureBtn"><i class="fa fa-desktop"></i> Screen</button>
+        <button type="button" class="btn btn-light border mt-1" id="cameraCaptureBtn"><i class="fa fa-camera"></i> Camera</button>
+        <button type="button" class="btn btn-light border mt-1" id="whiteboardCapture"><i class="fas fa-chalkboard"></i> Whiteboard</button>
+      </div>
+      <div class="row">
+        <div class="col-md-8">
+          <div id="currentStream">
+            <video style="height: 400px; background: transparent url('https://www.pngkey.com/png/detail/43-439069_play-button-white-smiley-face-black-background.png') 50% 50% / cover no-repeat ;" autoplay poster=""></video>
+          </div>
+          <div id="canvas-div" class="d-none">
+            <canvas class="sketchpad border" id="sketchpad"></canvas>
+            <div style="text-align: center">
+              <button class="btn btn-light border" id="undo"><i class="fas fa-undo-alt"></i></button>
+              <button class="btn btn-light border" id="redo"><i class="fas fa-redo-alt"></i></button>
+              <input id="color-picker" type="color">
+              <input id="size-picker" type="range"class="custom-range w-25 bf" min="1" max="50" value="10">
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4" id="messagesDiv">
+          <div>
+            <span class="text-success mb-0"><i class="fa fa-circle"></i> Live chat</span> -
+            <small class="text-secondary">Send messages to connected users</small>
+          </div>
+          <div id="messages" class="overflow-auto">
+          </div>
+          <form class="sendMsgForm mt-2" id="sendMsgForm">
+            <div class="form-group row p-1">
+              <div class="col-10 p-0">
+                <input type="text" class="form-control" id="chatMessageInput" placeholder="Type your message here">
+              </div>
+              <button class="col-2 btn btn-secondary p-0 btn-custom" type="submit"><i class="fas fa-paper-plane"></i></button>
+            </div> 
+          </form>
+        </div>
+      </div>
+      
+      <div id="canva"></div>
+    </div>
+    <div class="modal">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Enter Youtube Video Link</h5>
+            <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button> -->
+          </div>
+          <form id='youtubeLinkForm'>
+            <div class="modal-body">
+              <div class="form-group">
+                <label for="youtubeLinkInput">Link</label>
+                <input type="text" class="form-control" id="youtubeLinkInput" placeholder="Enter Link Here" required>
+                <small class="text-secondary">Go to youtube, click on video you want to stream, copy link and paste above</small>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="submit" class="btn btn-danger">Save changes</button>
+              <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </main>
+
+</body>
+<!-- Footer -->
+<footer class="page-footer font-small bg-light">
+
+  <!-- Footer Elements -->
+  <div class="container">
+
+    <!-- Grid row-->
+    <div class="row">
+
+      <!-- Grid column -->
+      <div class="col-md-12 pt-5 pb-2">
+        <div class="mb-5 text-center">
+
+          <!-- Facebook -->
+          <a class="fb-ic" href="#">
+            <i class="fab fa-facebook fa-lg white-text mr-md-5 mr-3 fa-2x"> </i>
+          </a>
+          <!-- Twitter -->
+          <a class="tw-ic" href="#">
+            <i class="fab fa-twitter fa-lg white-text mr-md-5 mr-3 fa-2x"> </i>
+          </a>
+          <!-- Google +-->
+          <a class="gplus-ic" href="#">
+            <i class="fab fa-google-plus-g fa-lg white-text mr-md-5 mr-3 fa-2x"> </i>
+          </a>
+          <!--Linkedin -->
+          <a class="li-ic" href="#">
+            <i class="fab fa-linkedin-in fa-lg white-text mr-md-5 mr-3 fa-2x"> </i>
+          </a>
+          <!--Instagram-->
+          <a class="ins-ic" href="#">
+            <i class="fab fa-instagram fa-lg white-text mr-md-5 mr-3 fa-2x"> </i>
+          </a>
+          <!--Pinterest-->
+          <a class="pin-ic" href="#">
+            <i class="fab fa-pinterest fa-lg white-text fa-2x"> </i>
+          </a>
+        </div>
+      </div>
+      <!-- Grid column -->
+
+    </div>
+    <!-- Grid row-->
+
+  </div>
+  <!-- Footer Elements -->
+
+  <!-- Copyright -->
+  <div class="footer-copyright text-center py-3 bg-footer">
+    Created by <b>Godwin Agedah</b><br>
+    © 2020 Copyright
+    <a href="https://godwinagedah.com.ng/"> godwinagedah.com.ng</a>
+  </div>
+  <!-- Copyright -->
+
+</footer>
+<!-- Footer -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sketchpad/0.1.0/scripts/initialize.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sketchpad/0.1.0/scripts/sketchpad.min.js"></script>
+<script src="/js/indexBundle.js"></script>
+</html>

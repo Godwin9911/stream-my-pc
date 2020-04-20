@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StreamTube | Remote </title>
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"> -->
+  <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-info">
+    <div class="container">
+      <a class="navbar-brand" href="#"><i class="fa fa-play-circle"></i> StreamTube | Remote Screen</a>
+  </nav>
+  <main>
+    <div class="container">
+      <p class="mb-0">Watch a remote stream</p>
+      <b><p id="currentUser"></p></b>
+      <div>
+        <small id="message"></small>
+        <small id="socketMessage"></small>
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col-md-9">
+          <!-- <video controls autoplay></video> -->
+          <div id="vid"></div>
+        </div>
+        <div class="col-md-3 h-auto" id="messagesDiv">
+          <div>
+            <p class="text-success">Live chat</p>
+          </div>
+          <div id="messages" class="overflow-auto">
+          </div>
+          <form class="sendMsgForm mt-2" id="sendMsgForm">
+            <div class="form-group row">
+              <div class="col-10 p-0">
+                <input type="text" class="form-control" id="chatMessageInput" placeholder="Type your message here">
+              </div>
+              <button class="col-2 btn btn-secondary p-0" type="submit">S</button>
+            </div> 
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="modal">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Enter Username to join Stream</h5>
+            <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button> -->
+          </div>
+          <form id='usernameForm'>
+            <div class="modal-body">
+              <div class="form-group">
+                <label for="username ">Username</label>
+                <input type="text" class="form-control" id="usernameInput" placeholder="Enter Username" required>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="submit" class="btn btn-info">Save changes</button>
+              <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </main>
+</body>
+<script src="/js/remoteBundle.js" ></script>
+</html>
