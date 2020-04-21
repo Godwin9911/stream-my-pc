@@ -2,7 +2,6 @@ window.addEventListener('load', () => {
   'use strict'
   // socket stuff
   const io = require('socket.io-client');
-  // const html2canvas = require('html2canvas');
   const { v4: uuidv4 } = require('uuid');
   const { connect, LocalVideoTrack, LocalAudioTrack } = require('twilio-video');
   const socket = io.connect();
