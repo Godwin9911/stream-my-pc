@@ -3,42 +3,56 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>StreamTube | Remote </title>
+  <title>StreamMyPC | Remote </title>
   <link rel="stylesheet" href="/css/bootstrap.min.css">
-  <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"> -->
+  <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sketchpad/0.1.0/styles/sketchpad.css">-->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
   <link rel="stylesheet" href="/css/main.css">
+  <style>
+    .modal {
+      display: block;
+    }
+  </style>
 </head>
 <body>
-  <nav class="navbar navbar-expand-lg navbar-dark bg-info">
+  <nav class="navbar navbar-expand-lg navbar-dark nav-custom-remote">
     <div class="container">
-      <a class="navbar-brand" href="#"><i class="fa fa-play-circle"></i> StreamTube | Remote Screen</a>
-  </nav>
+      <a class="navbar-brand" href="#"><i class="fa fa-play-circle fa-lg icon-color"></i> Stream<span class="icon-color">MyPC</span> | <small>Remote Screen</small></a>
+    <ul class="navbar-nav ml-auto">
+      <li class="nav-item">
+        <a class="nav-link text-white"><i class="far fa-user icon-color"></i> <b><span id="currentUser"></span></b></a>
+      </li>
+    </ul>
+    </nav>
   <main>
     <div class="container">
-      <p class="mb-0">Watch a remote stream</p>
-      <b><p id="currentUser"></p></b>
+      <p class="mb-0">Watch a remote stream - <small>Ensure you have a valid link from Host User.</small></p>
       <div>
         <small id="message"></small>
         <small id="socketMessage"></small>
       </div>
       <hr>
       <div class="row">
-        <div class="col-md-9">
+        <div class="col-md-8">
           <!-- <video controls autoplay></video> -->
-          <div id="vid"></div>
+          <div id="vid" style="height: 400px; background: transparent url('https://www.pngkey.com/png/detail/43-439069_play-button-white-smiley-face-black-background.png') 50% 50% / cover no-repeat ;">
+          </div>
+          <div id="aud"></div>
         </div>
-        <div class="col-md-3 h-auto" id="messagesDiv">
+        
+        <div class="col-md-4" id="messagesDiv">
           <div>
-            <p class="text-success">Live chat</p>
+            <span class="text-success mb-0"><i class="fa fa-circle"></i> Live chat</span> -
+            <small class="text-secondary">Send messages to connected users</small>
           </div>
           <div id="messages" class="overflow-auto">
           </div>
           <form class="sendMsgForm mt-2" id="sendMsgForm">
-            <div class="form-group row">
+            <div class="form-group row p-1">
               <div class="col-10 p-0">
-                <input type="text" class="form-control" id="chatMessageInput" placeholder="Type your message here">
+                <input type="text" class="form-control" id="chatMessageInput" placeholder="Type your message here" autocomplete="off">
               </div>
-              <button class="col-2 btn btn-secondary p-0" type="submit">S</button>
+              <button class="col-2 btn btn-secondary p-0 btn-custom-remote" type="submit"><i class="fas fa-paper-plane"></i></button>
             </div> 
           </form>
         </div>
@@ -56,12 +70,12 @@
           <form id='usernameForm'>
             <div class="modal-body">
               <div class="form-group">
-                <label for="username ">Username</label>
+                <label for="username "><i class="far fa-user"></i> Username</label>
                 <input type="text" class="form-control" id="usernameInput" placeholder="Enter Username" required>
               </div>
             </div>
             <div class="modal-footer">
-              <button type="submit" class="btn btn-info">Save changes</button>
+              <button type="submit" class="btn text-light btn-custom-remote">Save changes</button>
               <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
             </div>
           </form>
@@ -70,5 +84,63 @@
     </div>
   </main>
 </body>
+
+<!-- Footer -->
+<footer class="page-footer font-small bg-light">
+
+  <!-- Footer Elements -->
+  <div class="container">
+
+    <!-- Grid row-->
+    <div class="row">
+
+      <!-- Grid column -->
+      <div class="col-md-12 pt-5 pb-2">
+        <div class="mb-5 text-center">
+
+          <!-- Facebook -->
+          <a class="fb-ic" href="#">
+            <i class="fab fa-facebook fa-lg white-text mr-md-5 mr-3 fa-2x"> </i>
+          </a>
+          <!-- Twitter -->
+          <a class="tw-ic" href="#">
+            <i class="fab fa-twitter fa-lg white-text mr-md-5 mr-3 fa-2x"> </i>
+          </a>
+          <!-- Google +-->
+          <a class="gplus-ic" href="#">
+            <i class="fab fa-google-plus-g fa-lg white-text mr-md-5 mr-3 fa-2x"> </i>
+          </a>
+          <!--Linkedin -->
+          <a class="li-ic" href="#">
+            <i class="fab fa-linkedin-in fa-lg white-text mr-md-5 mr-3 fa-2x"> </i>
+          </a>
+          <!--Instagram-->
+          <a class="ins-ic" href="#">
+            <i class="fab fa-instagram fa-lg white-text mr-md-5 mr-3 fa-2x"> </i>
+          </a>
+          <!--Pinterest-->
+          <a class="pin-ic" href="#">
+            <i class="fab fa-pinterest fa-lg white-text fa-2x"> </i>
+          </a>
+        </div>
+      </div>
+      <!-- Grid column -->
+
+    </div>
+    <!-- Grid row-->
+
+  </div>
+  <!-- Footer Elements -->
+
+  <!-- Copyright -->
+  <div class="footer-copyright text-center py-3 bg-footer">
+    Created by <b>Godwin Agedah</b><br>
+    © 2020 Copyright
+    <a href="https://godwinagedah.com.ng/"> godwinagedah.com.ng</a>
+  </div>
+  <!-- Copyright -->
+
+</footer>
+<!-- Footer -->
 <script src="/js/remoteBundle.js" ></script>
 </html>

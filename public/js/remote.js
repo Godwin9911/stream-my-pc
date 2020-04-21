@@ -1,12 +1,14 @@
 window.addEventListener('load', () => {
   // socket stuff
   const io = require('socket.io-client');
+  const { v4: uuidv4 } = require('uuid');
+  const { connect } = require('twilio-video');
   const socket = io.connect();
 
   let username;
+  let token;
+  const identity = uuidv4();
   const color = Math.floor(Math.random()*16777215).toString(16);
-
-  const { connect } = require('twilio-video');
 
   const parser = document.createElement('a');
   parser.href = window.location;
@@ -18,6 +20,8 @@ window.addEventListener('load', () => {
   const modal = document.querySelector('.modal');
   const sendMsgForm = document.querySelector('#sendMsgForm');
   const messagesDiv = document.querySelector('#messages');
+
+  
 
   // socket emit  ---------------------------------
   const sendChatMessage = (message) => {
@@ -31,14 +35,25 @@ window.addEventListener('load', () => {
 
   // sockets on -----------------------------------
   socket.on('message', ({username, message, color}) => {
-    const li = `<li style="color: #${color};"><small><b>${username}:</b> ${message}</small></li>`
+    const li = `<li style="color: #${color};"><small><b><i class="far fa-user"></i> ${username}:</b> ${message}</small></li>`
     messagesDiv.insertAdjacentHTML('beforeend', li);
     messagesDiv.scrollTop = messagesDiv.scrollHeight;
   });
-
   socket.on('errorMsg', (msg) => {
     alert(msg);
   });
+
+  (async function getAccessToken() {
+    //TODO - add getting token loader..
+    try {
+      let response = await fetch(`/generate-token/${RoomFromLink}/${identity}`);
+      let data = await response.json();
+      console.log('fetch', data);
+      token = data.jwt;
+    } catch(e) {
+      console.error('Err', e);
+    }
+  })();
 
   usernameForm.addEventListener('submit', (e) => {
     e.preventDefault();
@@ -56,9 +71,10 @@ window.addEventListener('load', () => {
   });
 
   const joinstream = () => {
-    connect('eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiIsImN0eSI6InR3aWxpby1mcGE7dj0xIn0.eyJqdGkiOiJTSzQxZmU5NWUxYjRlZGVjZDdkYTJiMzRmNDM5MTIyN2RkLTE1ODczMjM3NjMiLCJpc3MiOiJTSzQxZmU5NWUxYjRlZGVjZDdkYTJiMzRmNDM5MTIyN2RkIiwic3ViIjoiQUMzZmRlODA3YzRkNGE4MWJhODQ2MjA3YWIxY2U0NTU4YiIsImV4cCI6MTU4NzMyNzM2MywiZ3JhbnRzIjp7ImlkZW50aXR5IjoicGMyIiwidmlkZW8iOnsicm9vbSI6InJvb20xIn19fQ.1iJobZsaOLSiewtxAjg3tWeWXT3SP3mxW9ct2R4Vqbw',
+    connect(
+      token,
     { 
-      name: 'room1',
+      name: RoomFromLink.toString(),
       tracks: []
     })
    .then(room => {
@@ -82,6 +98,7 @@ window.addEventListener('load', () => {
     room.once('disconnected', error => room.participants.forEach(participantDisconnected));
   
   }, error => {
+    console.error('catch', error);
     console.error(`Unable to connect to Room: ${error.message}`);
   });
   
@@ -90,9 +107,23 @@ window.addEventListener('load', () => {
     
       participant.on('trackSubscribed', track => {
         console.log('sub',track)
-        document.getElementById('vid').appendChild(track.attach());
-        document.querySelector('#vid video').controls = true;
-        // document.querySelector('#vid audio').controls = true;
+        if (track.kind === 'video') {
+          const vid = document.getElementById('vid');
+          vid.innerHTML = ``;
+          vid.style.backgroundColor = ""
+          vid.style.backgroundColor = "black";
+          vid.appendChild(track.attach());
+          document.querySelector('#vid video').controls = true;
+          vid.children[0].controls = true;
+        }
+
+        if (track.kind === 'audio') {
+          const aud = document.getElementById('aud');
+          aud.innerHTML = ``;
+          aud.appendChild(track.attach());
+          document.querySelector('#aud audio').controls = true;
+          aud.children[0].controls = true;
+        }
       });
       
       participant.on('trackUnsubscribed', track => console.log('unsub', track));

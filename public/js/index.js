@@ -8,6 +8,7 @@ window.addEventListener('load', () => {
   const socket = io.connect();
 
   const username = 'Host';
+  const identity = uuidv4();
   const color = Math.floor(Math.random()*16777215).toString(16);
   const roomName = uuidv4();
   let URL = window.URL || window.webkitURL;
@@ -17,23 +18,40 @@ window.addEventListener('load', () => {
   const whiteboardCapture = document.querySelector('#whiteboardCapture');
   const sendMsgForm = document.querySelector('#sendMsgForm');
   const messagesDiv = document.querySelector('#messages');
-  let stream;
-  let videoNode;
-  let sketchpad;
   const currentStream = document.querySelector('#currentStream');
   const canvas = document.querySelector('#canvas-div');
+
+  let testVid = document.getElementById('testVid');
+  let stream;
+  let audioStream;
+  let videoNode;
+  let sketchpad;
+  let token;
+
+  (async function getAccessToken() {
+    //TODO - add getting token loader..
+    try {
+      let response = await fetch(`/generate-token/${roomName}/${identity}`);
+      let data = await response.json();
+      console.log('fetch', data);
+      token = data.jwt;
+    } catch(e) {
+      console.error('Err', e);
+    }
+  })();
 
   (function resize (){
     sketchpad = new Sketchpad({
     element: '#sketchpad',
-    width: currentStream.offsetWidth - 20,
+    width: 710,
     height: 380,
   });
-  sketchpad.color = '#fff';
+  // sketchpad.color = '#fff';
   })();
 
   const stopCapture = () => {
     try {
+      audioStream = null;
       let tracks = videoNode.srcObject.getTracks();
       tracks.forEach(track => track.stop());
       videoNode.srcObject = null;
@@ -42,7 +60,6 @@ window.addEventListener('load', () => {
     }
   }
   
-
   const displayMessage = (message, isError = false) => {
     let element = document.querySelector('#message');
     element.innerHTML = message;
@@ -78,7 +95,7 @@ window.addEventListener('load', () => {
   });
 
   socket.on('message', ({username, message, color}) => {
-    const li = `<li style="color: #${color};"><small><b>${username}:</b> ${message}</small></li>`
+    const li = `<li style="color: #${color};"><small><b><i class="far fa-user"></i> ${username}:</b> ${message}</small></li>`
     messagesDiv.insertAdjacentHTML('beforeend', li);
     messagesDiv.scrollTop = messagesDiv.scrollHeight;
   });
@@ -95,7 +112,6 @@ window.addEventListener('load', () => {
     const file = this.files[0];
     const type = file.type;
     const canPlay = videoNode.canPlayType(type);
-    // console.log('canplay',canPlay);
 
     if (canPlay === '') canPlay = 'no'
     const message = `can play type ${type}`;
@@ -109,56 +125,71 @@ window.addEventListener('load', () => {
     stream = videoNode.captureStream();
   }
 
-  const startStream = async () => {
-    // TODO - check if video is loaded;
-    console.log('stream', stream);
-    
-    const screenLocalTrack = new LocalVideoTrack(stream.getVideoTracks()[0]);
-    const audioLocalTrack = new LocalAudioTrack(stream.getAudioTracks()[0]);
-    console.log(screenLocalTrack);
-    console.log(audioLocalTrack);
+  const startStream = async (streamType = 'default') => {
 
-    // TODO - get token from backend
-    const room = await connect(
-      'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiIsImN0eSI6InR3aWxpby1mcGE7dj0xIn0.eyJqdGkiOiJTSzQxZmU5NWUxYjRlZGVjZDdkYTJiMzRmNDM5MTIyN2RkLTE1ODczMjM2MDUiLCJpc3MiOiJTSzQxZmU5NWUxYjRlZGVjZDdkYTJiMzRmNDM5MTIyN2RkIiwic3ViIjoiQUMzZmRlODA3YzRkNGE4MWJhODQ2MjA3YWIxY2U0NTU4YiIsImV4cCI6MTU4NzMyNzIwNSwiZ3JhbnRzIjp7ImlkZW50aXR5IjoicGMxIiwidmlkZW8iOnsicm9vbSI6InJvb20xIn19fQ.oUJKwwpbQvTRKJxFKv1BoOOaETYe4SMTqoXFnDJ6M_U',
-    {
-      name: 'room1',
-      tracks: [screenLocalTrack, audioLocalTrack]
-    });
+    try {
 
-    room.on('participantConnected', participant => {
-      console.log(`A remote Participant connected: ${participant}`);
+      let tracks = [];
+      const mic = (audioStream) ? new LocalAudioTrack(audioStream.getAudioTracks()[0]) : null;
+      const audioLocalTrack = (stream.getAudioTracks()[0]) ? new LocalAudioTrack(stream.getAudioTracks()[0]) : null;
+      const screenLocalTrack = (stream.getVideoTracks()[0]) ? new LocalVideoTrack(stream.getVideoTracks()[0]) : null;
+      
+      if (screenLocalTrack) {
+        tracks.push(screenLocalTrack);
+      }
+      if (audioLocalTrack) {
+        tracks.push(audioLocalTrack);
+      }
+      if (mic) {
+        tracks.push(mic);
+      }
+
+      const options = {
+        name: roomName.toString(),
+        tracks
+      }
+
+      console.log(tracks);
+      const room = await connect(token, options);
+
+      room.on('participantConnected', participant => {
+        console.log(`A remote Participant connected: ${participant}`);
+      
+        participant.on('trackSubscribed', track => {
+          console.log('sub', track);
+          if (track.kind === 'data') {
+            track.on('message', (message) => {
+              console.log('message', message );
+            });
+          }
+        });
     
-      participant.on('trackSubscribed', track => {
-        console.log('sub', track);
-        if (track.kind === 'data') {
-          track.on('message', (message) => {
-            console.log('message', message );
-          });
-        }
+        participant.on('trackUnsubscribed', track => console.log('unsub', track));
+      
+        participant.on('trackAdded', track => {
+          console.log('add', track);
+          console.log(`Participant "${participant.identity}" added ${track.kind} Track ${track.sid}`);
+          /*if (track.kind === 'data') {
+            track.on('message', data => {
+              console.log(data);
+            });
+          }
+          */
+          
+        });
       });
-  
-      participant.on('trackUnsubscribed', track => console.log('unsub', track));
     
-      participant.on('trackAdded', track => {
-        console.log('add', track);
-        console.log(`Participant "${participant.identity}" added ${track.kind} Track ${track.sid}`);
-        /*if (track.kind === 'data') {
-          track.on('message', data => {
-            console.log(data);
-          });
-        }
-        */
-        
+      screenLocalTrack.once('stopped', () => {
+        room.localParticipant.unpublishTrack(screenLocalTrack);
       });
-    });
-  
-    screenLocalTrack.once('stopped', () => {
-      room.localParticipant.unpublishTrack(screenLocalTrack);
-    });
 
-    generateLink(); 
-    createChatRoom();
+      generateLink(); 
+      createChatRoom();
+
+    } catch (e) {
+      console.error('catch', e.name);
+      console.error(`Unable to connect to Room: ${e.message}`);
+    }
   }
 
   const generateLink = () => {
@@ -173,7 +204,9 @@ window.addEventListener('load', () => {
   const modal = document.querySelector('.modal');
 
   inputNode.addEventListener('change', playSelectedFile, false);
-  startStreamButton.addEventListener('click', startStream);
+  startStreamButton.addEventListener('click', (e) => {
+    startStream('localVideo');
+  });
   addYoutubeStreamLink.addEventListener('click', (e) => {
     modal.classList.add('d-block');
   });
@@ -212,9 +245,11 @@ window.addEventListener('load', () => {
     };
     try {
       stream = await navigator.mediaDevices.getUserMedia(options);
+      console.log('camera',stream);
       currentStream.innerHTML = `<video autoplay></video>`;
       videoNode = document.querySelector('#currentStream > video');
       videoNode.srcObject = stream;
+      startStream();
     } catch (err) {
       console.error("Error: " + err);
     }
@@ -234,18 +269,24 @@ window.addEventListener('load', () => {
       currentStream.innerHTML = `<video controls autoplay></video>`;
       videoNode = document.querySelector('#currentStream > video');
       videoNode.srcObject = stream;
+      // testVid.srcObject = stream;
+      //clonedStream = testVid.captureStream();
+      
+      startStream('screenCapture');
     } catch (err) {
       console.error("Error: " + err);
     }
   });
 
-  whiteboardCapture.addEventListener('click', (e) => {
+  whiteboardCapture.addEventListener('click', async (e) => {
+    // alert(currentStream.offsetWidth);
     stopCapture();
-    sketchpad = new Sketchpad({
-    element: '#sketchpad',
-    width: currentStream.offsetWidth - 20,
-    height: 380,
+    /*sketchpad = new Sketchpad({
+      element: '#sketchpad',
+      width: 710,
+      height: 380,
     });
+    */
     currentStream.innerHTML = ``;
     canvas.classList.remove('d-none');
     document.querySelector('#undo').addEventListener('click', (e) => {
@@ -263,6 +304,15 @@ window.addEventListener('load', () => {
     document.querySelector('#size-picker').addEventListener('change', (e) => {
       sketchpad.penSize = parseInt(e.target.value);
     });
+
+    audioStream = await navigator.mediaDevices.getUserMedia({audio: true, video: false});
+    stream = canvas.firstElementChild.captureStream();
+    //testVid.srcObject = audioStream;
+    startStream('canvas');
+    let can = canvas.firstElementChild;
+    let ctx = can.getContext("2d");
+    ctx.fillStyle = "white";
+    ctx.fillRect(0, 0, can.width, can.height);
   });
 
   sendMsgForm.addEventListener('submit', (e) => {
