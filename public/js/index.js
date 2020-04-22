@@ -1,5 +1,6 @@
 window.addEventListener('load', () => {
   'use strict'
+  
   // socket stuff
   const io = require('socket.io-client');
   // const html2canvas = require('html2canvas');
@@ -20,12 +21,18 @@ window.addEventListener('load', () => {
   const messagesDiv = document.querySelector('#messages');
   const currentStream = document.querySelector('#currentStream');
   const canvas = document.querySelector('#canvas-div');
+  const inputNode = document.querySelector('input');
+  const startStreamButton = document.querySelector('#startStream');
+  const stopStream = document.querySelector('#stopStream');
+  const addYoutubeStreamLink = document.querySelector('#addYoutubeStreamLink');
+  const modal = document.querySelector('.modal');
 
   let testVid = document.getElementById('testVid');
   let stream;
   let audioStream;
   let videoNode;
-  let sketchpad;
+  let initialCanvas = false;
+  // let sketchpad;
   let token;
 
   (async function getAccessToken() {
@@ -40,22 +47,57 @@ window.addEventListener('load', () => {
     }
   })();
 
-  /*(function resize (){
-    sketchpad = new Sketchpad({
-    element: '#sketchpad',
-    width: 710,
-    height: 380,
-  });
-  // sketchpad.color = '#fff';
-  })();
-  */
+  function initSketchpad() {
+    //create sketchpad on #sketchpad element
+    let sketchpad = new Sketchpad({
+        containerEl: document.getElementById("sketchpad"),
+        createPageConfig: {
+          no: 1
+        }
+    });
+    // avaliable tools `src/sketchpad.tool.*.js`, ex. "pen", "colouring", "line", "rect", "circ"...
+    let toolId = "pen";
+    let tool = sketchpad.setTool(toolId).getCurrentTool();
+
+    //create colorpalette on #colorpalette element
+    let colorpalette = new Colorpalette({
+        containerEl: document.getElementById("colorpalette")
+    }).on("change", function (e) { //bind on change event
+        sketchpad.setTool(toolId).getCurrentTool().setColor(e.color.red, e.color.green, e.color.blue, e.color.alpha);
+    }).setColor(tool.setColor(247, 56, 89, 1).getColor()); //set default color
+
+    // bind on change size event
+    document.getElementById("size").addEventListener("change", function (e) {
+        sketchpad.getCurrentTool().setSize(e.target.value);
+    });
+    document.getElementById("size").value = tool.setSize(2).getSize();//set default size
+
+    // bind eraser button
+    document.getElementById('eraser').addEventListener("click", function () {
+        sketchpad.setTool("eraser");
+    });
+
+    console.log(colorpalette);
+
+    //make objects below visible in global scope
+    window.sketchpad = sketchpad;
+    window.colorpalette = colorpalette;
+    window.tool = tool;
+  }
 
   const stopCapture = () => {
+    const videoNode = document.querySelector('#currentStream > video');
     try {
-      audioStream = null;
-      let tracks = videoNode.srcObject.getTracks();
-      tracks.forEach(track => track.stop());
-      videoNode.srcObject = null;
+      if (audioStream) {
+        const audio = audioStream.getTracks();
+        audio.forEach(track => track.stop());
+      }
+
+      if (stream) {
+        let tracks = videoNode.srcObject.getTracks();
+        tracks.forEach(track => track.stop());
+        videoNode.srcObject = null;
+      }
     } catch(e) {
       console.error('Err', e);
     }
@@ -108,6 +150,7 @@ window.addEventListener('load', () => {
 
 
   function playSelectedFile(e){
+    canvas.classList.add('d-none');
     currentStream.innerHTML = `<video controls autoplay></video>`;
     videoNode = document.querySelector('#currentStream > video');
     const file = this.files[0];
@@ -127,8 +170,8 @@ window.addEventListener('load', () => {
   }
 
   const startStream = async (streamType = 'default') => {
-
     try {
+      displayMessage('starting stream, please wait...')
 
       let tracks = [];
       const mic = (audioStream) ? new LocalAudioTrack(audioStream.getAudioTracks()[0]) : null;
@@ -188,8 +231,8 @@ window.addEventListener('load', () => {
       createChatRoom();
 
     } catch (e) {
-      console.error('catch', e.name);
       console.error(`Unable to connect to Room: ${e.message}`);
+      displayMessage(`Unable to connect to Room: ${e.message}`);
     }
   }
 
@@ -197,16 +240,14 @@ window.addEventListener('load', () => {
     const link = `${window.location.origin}\/remote/${roomName}`;
     displayMessage(`<b>sharable link:</b> <a href="${link}" target="_blank">${link}</a>`, false);
   }
-  //---------------------------------------------------
- 
-  const inputNode = document.querySelector('input');
-  const startStreamButton = document.querySelector('#startStream');
-  const addYoutubeStreamLink = document.querySelector('#addYoutubeStreamLink');
-  const modal = document.querySelector('.modal');
 
+  //--------------------------------------------------
   inputNode.addEventListener('change', playSelectedFile, false);
   startStreamButton.addEventListener('click', (e) => {
     startStream('localVideo');
+  });
+  stopStream.addEventListener('click', (e) => {
+    stopCapture();
   });
   addYoutubeStreamLink.addEventListener('click', (e) => {
     modal.classList.add('d-block');
@@ -280,39 +321,28 @@ window.addEventListener('load', () => {
   });
 
   whiteboardCapture.addEventListener('click', async (e) => {
-    // alert(currentStream.offsetWidth);
     stopCapture();
-    sketchpad = new Sketchpad({
-      element: '#sketchpad',
-      width: 710,
-      height: 380,
-    });
     currentStream.innerHTML = ``;
     canvas.classList.remove('d-none');
-    document.querySelector('#undo').addEventListener('click', (e) => {
-      sketchpad.undo()
-    });
-  
-    document.querySelector('#redo').addEventListener('click', (e) => {
-      sketchpad.redo()
-    });
-
-    document.querySelector('#color-picker').addEventListener('change', (e) => {
-      sketchpad.color = e.target.value;
-    });
-
-    document.querySelector('#size-picker').addEventListener('change', (e) => {
-      sketchpad.penSize = parseInt(e.target.value);
-    });
-
+    initSketchpad();
     audioStream = await navigator.mediaDevices.getUserMedia({audio: true, video: false});
-    stream = canvas.firstElementChild.captureStream();
-    //testVid.srcObject = audioStream;
+    stream = document.querySelector('#canvas').captureStream();
+
+    // TODO - click here to begin your stream;
+    const startCanvasStream = document.querySelector('#startCanvasStream');
+    // touch end.
+
+    window.tool.setSize(5000);
+    window.tool.setColor(255 , 255 , 255, 1);
+
+    startCanvasStream.addEventListener('click', (e) => {
+      if (!initialCanvas) {
+        window.tool.setSize(2);
+        window.tool.setColor(0, 0, 0, 1);
+        initialCanvas = true;
+      }
+    });
     startStream('canvas');
-    let can = canvas.firstElementChild;
-    let ctx = can.getContext("2d");
-    ctx.fillStyle = "white";
-    ctx.fillRect(0, 0, can.width, can.height);
   });
 
   sendMsgForm.addEventListener('submit', (e) => {

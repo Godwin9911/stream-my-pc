@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>StreamMyPC | Host</title>
   <link rel="stylesheet" href="/css/bootstrap.min.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sketchpad/0.1.0/styles/sketchpad.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
   <link rel="stylesheet" href="/css/main.css">
+  <script src="https://use.fontawesome.com/46af14eb3c.js"></script>
   <style>
   </style>
 </head>
@@ -27,6 +27,7 @@
         <p class="mb-0">Stream content from your PC to the internet</p>
         <small id="socketMessage"></small>
         <small id="message"></small>
+        <small id="canvas-msg"></small>
       </div>
       <hr>
       <div class="mb-1 pb-2">
@@ -36,21 +37,38 @@
         <button type="button" class="btn btn-light border mt-1" id="screenCaptureBtn"><i class="fa fa-desktop"></i> Screen</button>
         <button type="button" class="btn btn-light border mt-1" id="cameraCaptureBtn"><i class="fa fa-camera"></i> Camera</button>
         <button type="button" class="btn btn-light border mt-1" id="whiteboardCapture"><i class="fas fa-chalkboard"></i> Whiteboard</button>
+        <button type="button" class="btn btn-danger border mt-1" id="stopStream">Stop Stream</button>
+
       </div>
       <div class="row">
         <div class="col-md-8">
           <div id="currentStream">
             <video style="height: 400px; background: transparent url('https://www.pngkey.com/png/detail/43-439069_play-button-white-smiley-face-black-background.png') 50% 50% / cover no-repeat ;" autoplay poster=""></video>
           </div>
+          <a id="startCanvasStream">
           <div id="canvas-div" class="d-none">
-            <canvas class="sketchpad border" id="sketchpad"></canvas>
-            <div style="text-align: center">
-              <button class="btn btn-light border" id="undo"><i class="fas fa-undo-alt"></i></button>
-              <button class="btn btn-light border" id="redo"><i class="fas fa-redo-alt"></i></button>
-              <input id="color-picker" type="color">
-              <input id="size-picker" type="range"class="custom-range w-25 bf" min="1" max="50" value="10">
+            <div class="centered text-center"><i class="fas fa-mouse fa-lg"></i><br>Click Here to Start Stream</div>
+            <div class="">
+              <div class="">
+                <!-- SketchpadJS container here: -->
+                <div id="sketchpad"></div>
+              </div>
+              <div class="col-md-2 bg-light border mt-1" id="toolshed">
+                <div id="colorpalette" class="colorpalette"></div>
+                <hr>
+                <p>
+                Size: <input class="custom-range w-75 bf" id="size" type="range" min="0.5" max="100" value="1" step="0.1"/>
+                </p>
+                <hr>
+                <p>
+                  Erase:
+                  <span id="eraser" class="btn btn-secondary eraser center-block"><i class="fa fa-eraser" aria-hidden="true"></i></span>
+                </p>
+              </div>
             </div>
           </div>
+          </a>
+
         </div>
         <div class="col-md-4" id="messagesDiv">
           <div>
@@ -143,15 +161,13 @@
   <!-- Copyright -->
   <div class="footer-copyright text-center py-3 bg-footer">
     Created by <b>Godwin Agedah</b><br>
-    © 2020 Copyright
-    <a href="https://godwinagedah.com.ng/"> godwinagedah.com.ng</a>
+    #Twiliohackhaton
+    <a href="https://godwinagedah.com.ng/" target="_blank"> godwinagedah.com.ng</a>
   </div>
   <!-- Copyright -->
 
 </footer>
 <!-- Footer -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.0/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/sketchpad/0.1.0/scripts/initialize.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/sketchpad/0.1.0/scripts/sketchpad.min.js"></script>
+<script src="http://cdn.sketchpad.pro/dist/current/sketchpad.min.js"></script>
 <script src="/js/indexBundle.js"></script>
 </html>
