@@ -3,7 +3,6 @@ window.addEventListener('load', () => {
   
   // socket stuff
   const io = require('socket.io-client');
-  // const html2canvas = require('html2canvas');
   const { v4: uuidv4 } = require('uuid');
   const { connect, LocalVideoTrack, LocalAudioTrack } = require('twilio-video');
   const socket = io.connect();
@@ -26,6 +25,7 @@ window.addEventListener('load', () => {
   const stopStream = document.querySelector('#stopStream');
   const addYoutubeStreamLink = document.querySelector('#addYoutubeStreamLink');
   const modal = document.querySelector('.modal');
+  const loaderEl = document.querySelector('.loading');
 
   let testVid = document.getElementById('testVid');
   let stream;
@@ -45,6 +45,7 @@ window.addEventListener('load', () => {
     } catch(e) {
       console.error('Err', e);
     }
+    loaderEl.classList.add('d-none');
   })();
 
   function initSketchpad() {
@@ -232,7 +233,7 @@ window.addEventListener('load', () => {
 
     } catch (e) {
       console.error(`Unable to connect to Room: ${e.message}`);
-      displayMessage(`Unable to connect to Room: ${e.message}`);
+      displayMessage(`Unable to connect to Room: ${e.message}, ensure you have internet connection. then refresh the page`);
     }
   }
 

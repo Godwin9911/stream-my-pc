@@ -20,6 +20,7 @@ window.addEventListener('load', () => {
   const modal = document.querySelector('.modal');
   const sendMsgForm = document.querySelector('#sendMsgForm');
   const messagesDiv = document.querySelector('#messages');
+  const loaderEl = document.querySelector('.loading');
 
   
 
@@ -53,6 +54,7 @@ window.addEventListener('load', () => {
     } catch(e) {
       console.error('Err', e);
     }
+    loaderEl.classList.add('d-none');
   })();
 
   usernameForm.addEventListener('submit', (e) => {
