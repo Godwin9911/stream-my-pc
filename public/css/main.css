@@ -11,7 +11,7 @@ body {
   color: #f73859;
 }
 .btn-custom-remote {
-  background-color: #404b69;
+  background-color: #283149;
   color: #f73859;
 }
 nav {
@@ -21,7 +21,7 @@ nav {
   background-color: #283149;
 }
 .nav-custom-remote {
-  background-color: #404b69;
+  background-color: #283149;
 }
 .fa-circle {
   text-shadow: 0 0 5px #3d9e10;
@@ -99,7 +99,7 @@ footer a:hover {
 
 .centered {
   position: absolute;
-  top: 50%;
+  top: 40%;
   left: 50%;
   transform: translate(-50%, -50%);
   font-size: 2.5rem;
@@ -138,6 +138,13 @@ footer a:hover {
 }
 
 @media only screen and (min-width: 992px) {
+  .desc p {
+    margin-bottom: 0.2rem;
+  }
+  .alert {
+    font-size: 0.8rem;
+    padding: 0.5rem;
+  }
   #toolshed {
     position: fixed;
     bottom: 0;
@@ -145,7 +152,16 @@ footer a:hover {
     padding: 0.2rem;
     z-index: 99;
   }
+  #toolshed {
+    box-shadow: 2px 2px 5px 0px rgba(50, 50, 50, 0.75);
+  }
   #toolshed p {
     margin: 0;
+  }
+  .alert {
+    max-width: fit-content;
+  }
+  .centered {
+    top: 50%;
   }
 }

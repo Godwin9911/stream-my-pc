@@ -75,10 +75,10 @@ window.addEventListener('load', () => {
 
     // bind eraser button
     document.getElementById('eraser').addEventListener("click", function () {
-        sketchpad.setTool("eraser");
+        tool.setColor(255, 255, 255, 1);
+        tool.setSize(50);
+        // sketchpad.setTool("eraser");
     });
-
-    console.log(colorpalette);
 
     //make objects below visible in global scope
     window.sketchpad = sketchpad;
@@ -107,7 +107,7 @@ window.addEventListener('load', () => {
   const displayMessage = (message, isError = false) => {
     let element = document.querySelector('#message');
     element.innerHTML = message;
-    element.className = isError ? 'error' : 'info';
+    element.className = isError ? 'alert alert-danger' : 'alert alert-info';
   }
 
   const displaySocketMessage = (message, isError = false) => {
@@ -135,7 +135,7 @@ window.addEventListener('load', () => {
   // sockets on -----------------------------------
   socket.on('roomCreated', (data) => {
     console.log('roomcreated', data);
-    displaySocketMessage(`room created ${data}`)
+    // displaySocketMessage(`room created ${data}`)
   });
 
   socket.on('message', ({username, message, color}) => {
@@ -168,11 +168,17 @@ window.addEventListener('load', () => {
     const fileUrl = URL.createObjectURL(file);
     videoNode.src = fileUrl;
     stream = videoNode.captureStream();
+    displayMessage('click \'file stream\' to begin stream.' );
   }
 
   const startStream = async (streamType = 'default') => {
     try {
-      displayMessage('starting stream, please wait...')
+      if (streamType === 'canvas') {
+        displayMessage('Click canvas, to start creating images');
+      } else {
+        displayMessage('starting stream, please wait...');
+      }
+      
 
       let tracks = [];
       const mic = (audioStream) ? new LocalAudioTrack(audioStream.getAudioTracks()[0]) : null;
@@ -232,14 +238,14 @@ window.addEventListener('load', () => {
       createChatRoom();
 
     } catch (e) {
-      console.error(`Unable to connect to Room: ${e.message}`);
-      displayMessage(`Unable to connect to Room: ${e.message}, ensure you have internet connection. then refresh the page`);
+      // console.error(`Unable to connect to Room: ${e.message}`);
+      displayMessage(`Unable to connect to Room: ${e.message}, ensure you have internet connection. then refresh the page`, true);
     }
   }
 
   const generateLink = () => {
     const link = `${window.location.origin}\/remote/${roomName}`;
-    displayMessage(`<b>sharable link:</b> <a href="${link}" target="_blank">${link}</a>`, false);
+    displayMessage(`<b>sharable link:</b> <a href="${link}" target="_blank"><b>${link}</b></a>`, false);
   }
 
   //--------------------------------------------------
@@ -328,10 +334,7 @@ window.addEventListener('load', () => {
     initSketchpad();
     audioStream = await navigator.mediaDevices.getUserMedia({audio: true, video: false});
     stream = document.querySelector('#canvas').captureStream();
-
-    // TODO - click here to begin your stream;
     const startCanvasStream = document.querySelector('#startCanvasStream');
-    // touch end.
 
     window.tool.setSize(5000);
     window.tool.setColor(255 , 255 , 255, 1);
@@ -340,6 +343,7 @@ window.addEventListener('load', () => {
       if (!initialCanvas) {
         window.tool.setSize(2);
         window.tool.setColor(0, 0, 0, 1);
+        document.querySelector('.centered').classList.add('d-none');
         initialCanvas = true;
       }
     });

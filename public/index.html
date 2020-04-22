@@ -23,15 +23,17 @@
   </nav>
   <main>
     <div class="container">
-      <div class="p-2">
-        <p class="mb-0">Stream content from your PC to the internet</p>
-        <small id="socketMessage"></small>
-        <small id="message"></small>
-        <small id="canvas-msg"></small>
+      <div class="p-1 desc" >
+        <p class="mt-1">Stream content from your PC to the internet</p>
+        <div class="infos">
+          <p id="socketMessage" class="d-inline"></p>
+          <p id="message" class="d-inline"></p>
+          <p id="canvas-msg"></p>
+        </div>
       </div>
       <hr>
       <div class="mb-1 pb-2">
-        <input class="" type="file" accept="video/*"/>
+        <input class="btn btn-light border" type="file" accept="video/*"/>
         <button class="btn btn-light border mt-1" id="startStream"><i class="fa fa-file-video"></i> File Stream</button>
         <button type="button" class="btn btn-danger mt-1 d-none" id="addYoutubeStreamLink">Youtube Link</button>
         <button type="button" class="btn btn-light border mt-1" id="screenCaptureBtn"><i class="fa fa-desktop"></i> Screen</button>
@@ -117,10 +119,7 @@
     </div>
     <div class="loading display-4 icon-color">Loading...</div>
   </main>
-  <!-- <video id="testVid" autoplay></video> -->
-
-</body>
-<!-- Footer -->
+  <!-- Footer -->
 <footer class="page-footer font-small bg-light">
 
   <!-- Footer Elements -->
@@ -169,6 +168,7 @@
 
 </footer>
 <!-- Footer -->
-<script src="http://cdn.sketchpad.pro/dist/current/sketchpad.min.js"></script>
+<script src="https://cdn.sketchpad.pro/dist/current/sketchpad.min.js"></script>
 <script src="/js/indexBundle.js"></script>
+</body>
 </html>
