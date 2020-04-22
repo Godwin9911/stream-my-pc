@@ -54,8 +54,8 @@ After the above requirements have been met:
 1. Clone this repository and `cd` into it
 
 ```bash
-git clone git@github.com:twilio-labs/sample-template-nodejs.git
-cd sample-template-nodejs
+git clone https://github.com/Godwin9911/stream-my-pc.git
+cd stream-my-pc
 ```
 
 2. Install dependencies

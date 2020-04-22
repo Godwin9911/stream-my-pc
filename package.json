@@ -6,11 +6,12 @@
   "scripts": {
     "start": "node server",
     "build": "browserify public/js/index.js -o public/js/indexBundle.js && browserify public/js/remote.js -o public/js/remoteBundle.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install && npm run build"
   },
   "author": "Godwin Agedah",
   "license": "ISC",
   "dependencies": {
+    "browserify": "^16.5.1",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "socket.io": "^2.3.0",
@@ -18,5 +19,9 @@
     "twilio": "^3.42.2",
     "twilio-video": "^2.3.0",
     "uuid": "^7.0.3"
+  },
+  "engines": {
+    "node": "10.15.3",
+    "npm": "6.14.2"
   }
 }
