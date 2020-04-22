@@ -1,0 +1,24 @@
+  
+{
+  "name": "Stream My PC",
+  "description": "Stream content from your PC to the internet",
+  "website": "",
+  "logo": "/public/images/logo.png",
+  "success_url": "/",
+  "addons": [],
+  "keywords": ["nodejs", "twilio-video"],
+  "env": {
+    "ACCOUNT_SID": {
+      "description": "Your Twilio Account SID. Get a free account at twilio.com/try-twilio",
+      "value": ""
+    },
+    "API_KEY_SID": {
+      "description": "Your Twilio API KEY SID. generate one at twilio.com/console",
+      "value": ""
+    },
+    "API_KEY_SECRET": {
+      "description": "Your Twilio API KEY SECRET. generate one at twilio.com/console",
+      "value": ""
+    }
+  }
+}

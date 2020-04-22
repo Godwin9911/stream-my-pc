@@ -26,7 +26,7 @@ We can render UML diagrams using [Mermaid](https://mermaidjs.github.io/).
 - Bootstrap
 - Icons with fontawesome
 - Bundling frontend JS with Browserify
-- Project specific environment variables using `.env` file.
+- Project specific environment variables using `.env` file, see `.env.example` to see the required variables.
 
 ## How to use it
 
