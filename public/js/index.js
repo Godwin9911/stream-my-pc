@@ -2,6 +2,7 @@ window.addEventListener('load', () => {
   'use strict'
   // socket stuff
   const io = require('socket.io-client');
+  // const html2canvas = require('html2canvas');
   const { v4: uuidv4 } = require('uuid');
   const { connect, LocalVideoTrack, LocalAudioTrack } = require('twilio-video');
   const socket = io.connect();
@@ -39,7 +40,7 @@ window.addEventListener('load', () => {
     }
   })();
 
-  (function resize (){
+  /*(function resize (){
     sketchpad = new Sketchpad({
     element: '#sketchpad',
     width: 710,
@@ -47,6 +48,7 @@ window.addEventListener('load', () => {
   });
   // sketchpad.color = '#fff';
   })();
+  */
 
   const stopCapture = () => {
     try {
@@ -280,12 +282,11 @@ window.addEventListener('load', () => {
   whiteboardCapture.addEventListener('click', async (e) => {
     // alert(currentStream.offsetWidth);
     stopCapture();
-    /*sketchpad = new Sketchpad({
+    sketchpad = new Sketchpad({
       element: '#sketchpad',
       width: 710,
       height: 380,
     });
-    */
     currentStream.innerHTML = ``;
     canvas.classList.remove('d-none');
     document.querySelector('#undo').addEventListener('click', (e) => {

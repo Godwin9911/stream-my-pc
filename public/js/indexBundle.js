@@ -38361,7 +38361,7 @@ window.addEventListener('load', () => {
     }
   })();
 
-  (function resize (){
+  /*(function resize (){
     sketchpad = new Sketchpad({
     element: '#sketchpad',
     width: 710,
@@ -38369,6 +38369,7 @@ window.addEventListener('load', () => {
   });
   // sketchpad.color = '#fff';
   })();
+  */
 
   const stopCapture = () => {
     try {
@@ -38602,12 +38603,11 @@ window.addEventListener('load', () => {
   whiteboardCapture.addEventListener('click', async (e) => {
     // alert(currentStream.offsetWidth);
     stopCapture();
-    /*sketchpad = new Sketchpad({
+    sketchpad = new Sketchpad({
       element: '#sketchpad',
       width: 710,
       height: 380,
     });
-    */
     currentStream.innerHTML = ``;
     canvas.classList.remove('d-none');
     document.querySelector('#undo').addEventListener('click', (e) => {

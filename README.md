@@ -1,12 +1,10 @@
-<a  href="https://www.twilio.com">
-<img  src="https://static0.twilio.com/marketing/bundles/marketing/img/logos/wordmark-red.svg"  alt="Twilio"  width="250"  />
-</a>
+<img src="./public/images/logo.png">
  
 # Stream My PC
 
-[![Actions Status](https://github.com/twilio-labs/sample-template-nodejs/workflows/Node%20CI/badge.svg)](https://github.com/twilio-labs/sample-appointment-reminders/actions)
-
 ## About
+
+Stream content from your PC to the internet
 
 ### How it works
 

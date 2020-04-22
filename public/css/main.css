@@ -57,6 +57,7 @@ video {
 }
 #messages li {
   list-style-type: none;
+  padding-left: 1rem;
 }
 .sendMsgForm {
   position: relative;
