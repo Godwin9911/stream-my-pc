@@ -105,13 +105,17 @@ Additionally to trying out this application locally, you can deploy it to a vari
 
 Please be aware that some of these might charge you for the usage or might make the source code for this application visible to the public. When in doubt research the respective hosting service first.
 
-| Service                           |                                                                                                                                                                                                                           |
+| Service                           | Cloud                                                                                                                                                                                                                          |
 | :-------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | [Heroku](https://www.heroku.com/) | [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)                                                                                                                                       |
 
 ## Resources
 
--
+- [Using the Screen Capture API - Web APIs](https://developer.mozilla.org/en-US/docs/Web/API/Screen_Capture_API/Using_Screen_Capture)
+- [Screen Capture - Twilio](https://www.twilio.com/docs/video/javascript-v1-screen-capture-chrome)
+- [Getting Started - Twilio](https://www.twilio.com/docs/video/javascript-v2-getting-started#set-up-local-media)
+- [WebRTC samples](https://webrtc.github.io/samples/)
+- [Sketch Pad](http://sketchpad.pro/)
 
 ## Contributing
 
