@@ -1,7 +1,6 @@
 window.addEventListener('load', () => {
   'use strict'
   
-  // socket stuff
   const io = require('socket.io-client');
   const { v4: uuidv4 } = require('uuid');
   const { connect, LocalVideoTrack, LocalAudioTrack } = require('twilio-video');
@@ -27,12 +26,10 @@ window.addEventListener('load', () => {
   const modal = document.querySelector('.modal');
   const loaderEl = document.querySelector('.loading');
 
-  let testVid = document.getElementById('testVid');
   let stream;
   let audioStream;
   let videoNode;
   let initialCanvas = false;
-  // let sketchpad;
   let token;
 
   (async function getAccessToken() {
@@ -239,7 +236,7 @@ window.addEventListener('load', () => {
 
     } catch (e) {
       // console.error(`Unable to connect to Room: ${e.message}`);
-      displayMessage(`Unable to connect to Room: ${e.message}, ensure you have internet connection. then refresh the page`, true);
+      displayMessage(`Unable to connect to Room: ${e.message}, refresh your browser`, true);
     }
   }
 
@@ -251,7 +248,13 @@ window.addEventListener('load', () => {
   //--------------------------------------------------
   inputNode.addEventListener('change', playSelectedFile, false);
   startStreamButton.addEventListener('click', (e) => {
-    startStream('localVideo');
+    const videoFile = document.getElementById('videoFile')
+    if (videoFile.files.length == 0) {
+      displayMessage('Please select a video', true);
+      videoFile.focus();
+    } else {
+      startStream('localVideo');
+    }
   });
   stopStream.addEventListener('click', (e) => {
     stopCapture();
@@ -298,6 +301,7 @@ window.addEventListener('load', () => {
       currentStream.innerHTML = `<video autoplay></video>`;
       videoNode = document.querySelector('#currentStream > video');
       videoNode.srcObject = stream;
+      videoNode.muted = true;
       startStream();
     } catch (err) {
       console.error("Error: " + err);
@@ -318,9 +322,6 @@ window.addEventListener('load', () => {
       currentStream.innerHTML = `<video controls autoplay></video>`;
       videoNode = document.querySelector('#currentStream > video');
       videoNode.srcObject = stream;
-      // testVid.srcObject = stream;
-      //clonedStream = testVid.captureStream();
-      
       startStream('screenCapture');
     } catch (err) {
       console.error("Error: " + err);

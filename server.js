@@ -15,10 +15,10 @@ let rooms = [];
 
 io.on('connection', (socket) => {
   users.push(socket.id);
-  console.log(`${users.length} users connected`);
+  // console.log(`${users.length} users connected`);
 
   socket.on('createChatRoom', ({ room }) => {
-    console.log(room);
+    // console.log(room);
     rooms.push(room);
     socket.join(room);
     io.sockets.in(room).emit('roomCreated', true);
@@ -38,7 +38,7 @@ io.on('connection', (socket) => {
   });
 
   socket.on('sendChatMessage', ({ room, username, message, color}) => {
-    console.log(room, username, message, color);
+    // console.log(room, username, message, color);
     if (rooms.includes(room)) {
       io.sockets.in(room).emit('message', {
         username,
@@ -50,7 +50,7 @@ io.on('connection', (socket) => {
 
   socket.on('disconnect', () => {
     users.splice(socket.id, 1);
-    console.log(`user disconnected, ${users.length} left`);
+    // console.log(`user disconnected, ${users.length} left`);
   })
 });
 

@@ -13,7 +13,6 @@ window.addEventListener('load', () => {
   const parser = document.createElement('a');
   parser.href = window.location;
   const RoomFromLink = parser.pathname.split('/')[2];
-  // console.log(RoomFromLink);
   
   const usernameForm = document.getElementById('usernameForm');
   const currentuser = document.querySelector('#currentUser');
@@ -21,6 +20,7 @@ window.addEventListener('load', () => {
   const sendMsgForm = document.querySelector('#sendMsgForm');
   const messagesDiv = document.querySelector('#messages');
   const loaderEl = document.querySelector('.loading');
+  document.querySelector('#link').innerHTML = `<a href="${location.origin}" class="font-weight-bold">Here</a>`
 
   
 
@@ -45,7 +45,6 @@ window.addEventListener('load', () => {
   });
 
   (async function getAccessToken() {
-    //TODO - add getting token loader..
     try {
       let response = await fetch(`/generate-token/${RoomFromLink}/${identity}`);
       let data = await response.json();
@@ -62,6 +61,7 @@ window.addEventListener('load', () => {
     username = document.getElementById('usernameInput').value;
     currentuser.textContent = username;
     modal.classList.add('d-none');
+    
     // join room
     socket.emit('joinRoom', {
       room: RoomFromLink,
@@ -112,7 +112,7 @@ window.addEventListener('load', () => {
         if (track.kind === 'video') {
           const vid = document.getElementById('vid');
           vid.innerHTML = ``;
-          vid.style.backgroundColor = ""
+          vid.style.background = ""
           vid.style.backgroundColor = "black";
           vid.appendChild(track.attach());
           document.querySelector('#vid video').controls = true;
